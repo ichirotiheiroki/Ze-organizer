@@ -123,8 +123,9 @@ setInterval(function () {
 	document.getElementById('Time').innerHTML =
 		time(d.getHours()) + ':' +
 		place(d.getMinutes()) + ':' +
-		place(d.getSeconds()) + ' ' +
-		am(d.getHours());
+		place(d.getSeconds()) + ' '
+		// am(d.getHours())
+		;
 
 	function day(n) {
 		let days = ['Воскресенье',
@@ -154,7 +155,7 @@ setInterval(function () {
 	}
 
 	function time(n) {
-		n = n % 12
+		n = n % 24
 		return n == 0 ? 12 : n
 	}
 
@@ -167,3 +168,35 @@ setInterval(function () {
 	}
 
 }, 1000)
+
+
+
+let api_key = "59f3e581022d2eb378efd6da3360138c";
+
+let exclude = "current"; //* may be: current, minutely, hourly, daily, alerts.
+let city_name = "Baku";
+// let lon = "-99.771335";
+// let lat = "30.489772";
+// let units = "metric"; //* may be: standard, metric and imperial.
+// let lang = "ru";
+// let api_url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=${exclude}&appid=${api_key}&units=${units}&lang=${lang}`;
+fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city_name}&appid=${api_key}`)
+	.then(function (response) {
+		return response.json()
+	})
+	.then(function (data) {
+		console.log(data);
+		console.log(data.name);
+		document.querySelector('.city-name').innerHTML = data.name;
+		document.querySelector('.feels_like').innerHTML = ' But feels like ' + Math.round(data.main.feels_like - 273) + '&deg;';
+		document.querySelector('.description').textContent = data.weather[0].description;
+		document.querySelector('.icon').innerHTML = `<img src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" width="50px" height="50px" alt=""></img><span class="heading">32°C</span>`;
+
+		document.querySelector('.heading').innerHTML = Math.round(data.main.temp - 273) + '&deg;';
+
+
+
+
+
+	})
+
